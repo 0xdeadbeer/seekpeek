@@ -1,4 +1,7 @@
 #include <gtk/gtk.h>
+#include <stdio.h>
+
+#include "./dom.h" 
 
 static GtkWidget *window; 
 static GtkCssProvider *provider; 
@@ -13,16 +16,17 @@ static void activate (GtkApplication *app, gpointer user_data)
   grid = gtk_grid_new(); 
   gtk_window_set_child(GTK_WINDOW(window), grid);
   gtk_widget_add_css_class(grid, "searchbar");
+  gtk_grid_set_column_homogeneous(grid, TRUE); 
 
   text = gtk_text_new(); 
-  gtk_grid_attach(GTK_GRID(grid), text, 0, 0, 1, 1); 
+  gtk_grid_attach(GTK_GRID(grid), text, 0, 0, 5, 1); 
   gtk_widget_add_css_class(text, "search-input");
-  gtk_text_set_placeholder_text(text, "query"); 
+  gtk_text_set_placeholder_text(text, "Search query:"); 
 
   button = gtk_button_new_with_label("Search!");
-  gtk_grid_attach(GTK_GRID(grid), button, 1, 0, 1, 1); 
+  gtk_grid_attach(GTK_GRID(grid), button, 5, 0, 1, 1); 
   gtk_widget_add_css_class(button, "search-button"); 
-
+  
   gtk_window_present (GTK_WINDOW (window));
 }
 
