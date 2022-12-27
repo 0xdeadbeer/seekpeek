@@ -36,7 +36,7 @@
   border-radius: .2rem; 
 
   padding: 3px; 
-  caret-color: white; 
+  caret-color: @input_text; 
 }
 
 .search-input placeholder {
