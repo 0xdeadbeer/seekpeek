@@ -1,0 +1,50 @@
+/*
+ *
+ * Color palette: 
+ *  - first: #364f6b
+ *  - second: #3fc1c9
+ *  - third: #f5f5f5
+ *  - fourth: #fc5185 
+ *  - fifth: #0f0f0f
+ *
+ *  - text: #f5f5f5
+ *  - background: #0f0f0f
+ *  - primary: #3fc1c9
+ *  - secondary: #364f6b
+ *  - err/tertiary: #fc5185
+ *
+ */
+
+@define-color text #f5f5f5; 
+@define-color background #0f0f0f; 
+@define-color primary #3fc1c9; 
+@define-color secondary #364f6b; 
+@define-color tertiary #fc5185; 
+
+@define-color input_background #525252; 
+@define-color input_text #f5f5f5;
+@define-color input_placeholder #c9c9c9;
+
+.searchbar {
+  padding: 10px;
+}
+
+.search-input {
+  font-size: 15px;
+  background-color: @input_background;  
+  color: @input_text; 
+  border-radius: .2rem; 
+
+  padding: 3px; 
+  caret-color: white; 
+}
+
+.search-input placeholder {
+  color: @input_placeholder; 
+}
+
+.search-button {
+  background-image: none; 
+  background-color: @input_background; 
+  color: @input_text; 
+}
