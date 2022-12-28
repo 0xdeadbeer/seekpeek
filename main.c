@@ -1,4 +1,5 @@
 #include <gtk/gtk.h>
+#include <curl/curl.h>
 #include <stdio.h>
 
 #include "./dom.h" 
@@ -7,11 +8,18 @@ static GtkWidget *window;
 static GtkCssProvider *provider; 
 static GdkDisplay *display; 
 
+void search_event(GtkButton *self, gpointer user_data) {
+  printf("Button clicked!\n");
+}
+
 static void activate (GtkApplication *app, gpointer user_data)
 {
   GtkWidget *grid; 
   GtkWidget *button; 
   GtkWidget *text;
+
+  GdkCursor *clicked_cursor; 
+  clicked_cursor = gdk_cursor_new_from_name("pointer", NULL);
 
   grid = gtk_grid_new(); 
   gtk_window_set_child(GTK_WINDOW(window), grid);
@@ -26,6 +34,8 @@ static void activate (GtkApplication *app, gpointer user_data)
   button = gtk_button_new_with_label("Search!");
   gtk_grid_attach(GTK_GRID(grid), button, 5, 0, 1, 1); 
   gtk_widget_add_css_class(button, "search-button"); 
+  g_signal_connect(button, "clicked", G_CALLBACK(search_event), NULL);
+  gtk_widget_set_cursor(button, clicked_cursor); 
   
   gtk_window_present (GTK_WINDOW (window));
 }

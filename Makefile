@@ -1,5 +1,5 @@
-GTK_FLAGS=`pkg-config --cflags gtk4`
-GTK_LIBS=`pkg-config --libs gtk4`
+CFLAGS=`pkg-config --cflags gtk4 libcurl`
+LIBS=`pkg-config --libs gtk4 libcurl`
 SP_OUTPUT_DIR=build
 SP_OUTPUT_NAME=seekpeek
 SP_OUTPUT_LOCATION=$(SP_OUTPUT_DIR)/$(SP_OUTPUT_NAME)
@@ -9,7 +9,7 @@ run:
 
 build: 
 	mkdir -p $(SP_OUTPUT_DIR)
-	gcc $(GTK_FLAGS) main.c -o $(SP_OUTPUT_LOCATION) $(GTK_LIBS)
+	gcc $(CFLAGS) main.c -o $(SP_OUTPUT_LOCATION) $(LIBS)
 
 clean: 
 	rm -rf $(SP_OUTPUT_DIR)/

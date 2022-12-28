@@ -48,3 +48,9 @@
   background-color: @input_background; 
   color: @input_text; 
 }
+
+.search-button:hover {
+  background-color: @background; 
+  color: @text; 
+  transition: .3s;
+}
