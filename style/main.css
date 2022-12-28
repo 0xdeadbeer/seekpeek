@@ -39,10 +39,6 @@
   caret-color: @input_text; 
 }
 
-.search-input placeholder {
-  color: @input_placeholder; 
-}
-
 .search-button {
   background-image: none; 
   background-color: @input_background; 

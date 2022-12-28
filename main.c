@@ -4,12 +4,38 @@
 
 #include "./dom.h" 
 
+// === GLOBAL === 
+
+static CURL *curl_handle; 
+
 static GtkWidget *window; 
 static GtkCssProvider *provider; 
 static GdkDisplay *display; 
 
+// === GLOBAL === 
+
 void search_event(GtkButton *self, gpointer user_data) {
-  printf("Button clicked!\n");
+  CURLcode page_response; 
+
+  GtkTextBuffer *text_buffer = gtk_text_view_get_buffer(user_data); 
+  int chars = gtk_text_buffer_get_char_count(text_buffer);
+  GtkTextIter start_iter; 
+  GtkTextIter end_iter; 
+  
+  gtk_text_buffer_get_start_iter(text_buffer, &start_iter); 
+  gtk_text_buffer_get_end_iter(text_buffer, &end_iter);
+
+  char *url = gtk_text_buffer_get_text(text_buffer, &start_iter, &end_iter, FALSE);
+
+  curl_handle = curl_easy_init();
+  curl_easy_setopt(curl_handle, CURLOPT_URL, url); 
+  page_response = curl_easy_perform(curl_handle); 
+
+  if (CURLE_OK != page_response) 
+    printf("Curling website failed: %s\n", curl_easy_strerror(page_response)); 
+
+  // cleanup
+  curl_easy_cleanup(curl_handle); 
 }
 
 static void activate (GtkApplication *app, gpointer user_data)
@@ -26,15 +52,14 @@ static void activate (GtkApplication *app, gpointer user_data)
   gtk_widget_add_css_class(grid, "searchbar");
   gtk_grid_set_column_homogeneous(grid, TRUE); 
 
-  text = gtk_text_new(); 
+  text = gtk_text_view_new(); 
   gtk_grid_attach(GTK_GRID(grid), text, 0, 0, 5, 1); 
   gtk_widget_add_css_class(text, "search-input");
-  gtk_text_set_placeholder_text(text, "Search query:"); 
 
   button = gtk_button_new_with_label("Search!");
   gtk_grid_attach(GTK_GRID(grid), button, 5, 0, 1, 1); 
   gtk_widget_add_css_class(button, "search-button"); 
-  g_signal_connect(button, "clicked", G_CALLBACK(search_event), NULL);
+  g_signal_connect(button, "clicked", G_CALLBACK(search_event), text);
   gtk_widget_set_cursor(button, clicked_cursor); 
   
   gtk_window_present (GTK_WINDOW (window));
@@ -60,11 +85,17 @@ int main (int argc, char **argv)
   GtkApplication *app;
   int status;
 
+  // perform regular startup
+
+  curl_global_init(CURL_GLOBAL_ALL); 
+
   app = gtk_application_new ("org.osamu-sp.seekpeek", G_APPLICATION_DEFAULT_FLAGS);
   g_signal_connect(app, "startup", G_CALLBACK(startup), NULL);
   g_signal_connect(app, "activate", G_CALLBACK (activate), NULL);
   status = g_application_run (G_APPLICATION (app), argc, argv);
-  g_object_unref (app);
 
+  // perform regular cleanup
+  g_object_unref (app);
+  curl_global_cleanup(); 
   return status;
 }
