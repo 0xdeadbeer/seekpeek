@@ -5,7 +5,6 @@
 #include <string.h>
 
 // === GLOBAL === 
-
 static CURL *curl_handle; 
 
 static GtkWindow *window; 
@@ -68,6 +67,29 @@ serialize(lxb_dom_node_t *node)
   }
 }
 
+lxb_status_t 
+local_serialize(lxb_dom_node_t *node, size_t indentation_layer) {
+  lxb_status_t status; 
+  struct lxb_dom_node *main_node = node; 
+
+  // DEBUG: print the tree
+  // printf("Node: %d\n", *(&main_node->local_name));
+
+  if (main_node->first_child != NULL) 
+    status = local_serialize(*(&main_node->first_child), indentation_layer++); 
+
+  if (status != LXB_STATUS_OK) 
+    return LXB_STATUS_ERROR; 
+
+  if (main_node->next != NULL)
+    status = local_serialize(*(&main_node->next), indentation_layer); 
+  
+  if (status != LXB_STATUS_OK)
+    return LXB_STATUS_ERROR; 
+  
+  return LXB_STATUS_OK;
+}
+
 void 
 connect_event(GtkButton *self, gpointer user_data) 
 {
@@ -115,7 +137,9 @@ connect_event(GtkButton *self, gpointer user_data)
     return;
   }
 
-  serialize(lxb_dom_interface_node(document));
+  local_serialize(lxb_dom_interface_node(document), 1);
+
+  lxb_html_document_destroy(document);
 }
 
 static void 
