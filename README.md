@@ -9,6 +9,7 @@ Seekpeek is a temporary project I have been working on recently. It doesn't have
 
 Required libraries: 
  - <a href="https://docs.gtk.org/gtk4/">GTK4</a>
+ - <a href="https://curl.se/libcurl/">Libcurl</a>
  - <a href="https://github.com/lexbor/lexbor">Lexbor</a>
 
 > Before compiling the program make sure you have installed the required libraries onto your system.
