@@ -1,10 +1,12 @@
 #include <gtk/gtk.h>
 #include <curl/curl.h>
 #include <lexbor/html/html.h>
+#include <lexbor/dom/interfaces/text.h>
 #include <stdio.h>
 #include <string.h>
 
 // === GLOBAL === 
+#define DEBUG TRUE
 static CURL *curl_handle; 
 
 static GtkWindow *window; 
@@ -15,6 +17,10 @@ struct html_output_string {
   char *ptr;
   size_t len; 
 }; 
+
+// === GLOBAL GTK ELEMENTS === 
+GtkWidget *application_grid;
+GtkWidget *html_document_container; 
 
 // === GLOBAL === 
 static size_t 
@@ -47,47 +53,52 @@ get_html_response(void *contents, size_t size, size_t nmemb, struct html_output_
   return size * nmemb; 
 }
 
-lxb_inline lxb_status_t
-serializer_callback(const lxb_char_t *data, size_t len, void *ctx)
-{
-  printf("%.*s", (int) len, (const char *) data);
+GtkWidget *
+parse_node(struct lxb_dom_node *node) {
+  GtkWidget *output_node = NULL;
+  lxb_tag_id_enum_t node_local_name = *(&node->local_name); 
 
-  return LXB_STATUS_OK;
-}
+  if (DEBUG) printf("Parsing node local name: %d\n", node_local_name); 
+  
+  switch (node_local_name) {
+    case LXB_TAG_P: 
+      output_node = gtk_text_new(); 
 
-lxb_inline void
-serialize(lxb_dom_node_t *node)
-{
-  lxb_status_t status;
+      struct lxb_dom_node *child_node = *(&node->first_child); 
 
-  status = lxb_html_serialize_pretty_tree_cb(node, LXB_HTML_SERIALIZE_OPT_UNDEF, 0, serializer_callback, NULL);
+      if (*(&child_node->local_name) != 2) 
+        break; 
 
-  if (status != LXB_STATUS_OK) {
-    printf("Failed to serialization HTML tree");
+      struct lxb_dom_text *text_node = lxb_dom_interface_text(child_node); 
+      lxb_char_t *child_text = *(&text_node->char_data.data.data);
+      size_t child_text_length = *(&text_node->char_data.data.length);
+    
+      GtkWidget *text_buffer = gtk_entry_buffer_new((char*) child_text, child_text_length);
+      gtk_text_set_buffer(output_node, text_buffer); 
+
+      break; 
   }
+
+
+  return output_node; 
 }
 
-lxb_status_t 
-local_serialize(lxb_dom_node_t *node, size_t indentation_layer) {
-  lxb_status_t status; 
+void
+serialize(lxb_dom_node_t *node, size_t indentation_layer) {
   struct lxb_dom_node *main_node = node; 
 
-  // DEBUG: print the tree
-  // printf("Node: %d\n", *(&main_node->local_name));
+  if (DEBUG) printf("Node: %d\n", *(&main_node->local_name));
+
+  GtkText *new_node = parse_node(main_node); 
+
+  if (new_node != NULL)
+    gtk_box_append(html_document_container, new_node);
 
   if (main_node->first_child != NULL) 
-    status = local_serialize(*(&main_node->first_child), indentation_layer++); 
-
-  if (status != LXB_STATUS_OK) 
-    return LXB_STATUS_ERROR; 
+    serialize(*(&main_node->first_child), indentation_layer++); 
 
   if (main_node->next != NULL)
-    status = local_serialize(*(&main_node->next), indentation_layer); 
-  
-  if (status != LXB_STATUS_OK)
-    return LXB_STATUS_ERROR; 
-  
-  return LXB_STATUS_OK;
+    serialize(*(&main_node->next), indentation_layer); 
 }
 
 void 
@@ -137,7 +148,11 @@ connect_event(GtkButton *self, gpointer user_data)
     return;
   }
 
-  local_serialize(lxb_dom_interface_node(document), 1);
+  gtk_grid_remove(GTK_GRID(application_grid), html_document_container); 
+  html_document_container = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5); 
+  gtk_grid_attach(GTK_GRID(application_grid), html_document_container, 0, 1, 6, 6);
+
+  serialize(lxb_dom_interface_node(document), 1);
 
   lxb_html_document_destroy(document);
 }
@@ -145,28 +160,26 @@ connect_event(GtkButton *self, gpointer user_data)
 static void 
 activate (GtkApplication *app, gpointer user_data)
 {
-  GtkWidget *grid; 
-  GtkWidget *button; 
-  GtkWidget *text;
+  GtkWidget *button, *text;
 
   GdkCursor *clicked_cursor; 
   clicked_cursor = gdk_cursor_new_from_name("pointer", NULL);
 
-  grid = gtk_grid_new(); 
-  gtk_window_set_child(GTK_WINDOW(window), grid);
-  gtk_widget_add_css_class(grid, "searchbar");
-  gtk_grid_set_column_homogeneous(grid, TRUE); 
+  application_grid = gtk_grid_new(); 
+  gtk_window_set_child(GTK_WINDOW(window), application_grid);
+  gtk_widget_add_css_class(application_grid, "searchbar");
+  gtk_grid_set_column_homogeneous(application_grid, TRUE); 
 
   text = gtk_text_view_new(); 
-  gtk_grid_attach(GTK_GRID(grid), text, 0, 0, 5, 1); 
+  gtk_grid_attach(GTK_GRID(application_grid), text, 0, 0, 5, 1); 
   gtk_widget_add_css_class(text, "search-input");
 
   button = gtk_button_new_with_label("Connect!");
-  gtk_grid_attach(GTK_GRID(grid), button, 5, 0, 1, 1); 
+  gtk_grid_attach(GTK_GRID(application_grid), button, 5, 0, 1, 1); 
   gtk_widget_add_css_class(button, "search-button"); 
   g_signal_connect(button, "clicked", G_CALLBACK(connect_event), text);
   gtk_widget_set_cursor(button, clicked_cursor); 
-  
+
   gtk_window_present (GTK_WINDOW (window));
 }
 
