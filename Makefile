@@ -4,13 +4,19 @@ SINGLE_LIBS=-llexbor_static
 SP_OUTPUT_DIR=build
 SP_OUTPUT_NAME=seekpeek
 SP_OUTPUT_LOCATION=$(SP_OUTPUT_DIR)/$(SP_OUTPUT_NAME)
+SOURCES=$(shell find . -name '*.c')
 
 run: 
 	./$(SP_OUTPUT_LOCATION)
+SOURCES=$(wildcard *.c)
+
+%.o: %.c
+	gcc -c $(CFLAGS) -o $(SP_OUTPUT_DIR)/$(notdir $@) $^ $(LIBS) $(SINGLE_LIBS)
+#	gcc $(CFLAGS) main.c -o $(SP_OUTPUT_LOCATION) $(LIBS) $(SINGLE_LIBS)
 
 build: 
-	mkdir -p $(SP_OUTPUT_DIR)
-	gcc $(CFLAGS) main.c -o $(SP_OUTPUT_LOCATION) $(LIBS) $(SINGLE_LIBS)
+	mkdir $(SP_OUTPUT_DIR)
+	gcc $(CFLAGS) -o $(SP_OUTPUT_LOCATION) $(shell find . -name '*.c') $(LIBS) $(SINGLE_LIBS)
 
 clean: 
 	rm -rf $(SP_OUTPUT_DIR)/
