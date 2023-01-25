@@ -5,10 +5,14 @@
 #include <lexbor/html/html.h>
 #include <lexbor/dom/interfaces/text.h>
 
-GtkWidget *
-parse_node(lxb_dom_node_t *node); 
+// Subparsers for all the different types of html nodes.
+// Those are tipically called straight from the switch
+// statement inside the parse_node function.
+GtkWidget *subparser_p_tag(lxb_dom_node_t *node); 
+GtkWidget *subparser_h_tag(lxb_dom_node_t *node); 
+GtkWidget *subparser_div_tag(lxb_dom_node_t *node); 
 
-void 
-parse_structure(lxb_dom_node_t *node, GtkWidget *container); 
+GtkWidget *parse_node(lxb_dom_node_t *node); 
+void parse_structure(lxb_dom_node_t *node, GtkWidget *container); 
 
 #endif 
