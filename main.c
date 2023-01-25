@@ -27,7 +27,7 @@ connect_event_data event_data;
 void 
 activate (GtkApplication *app, gpointer user_data)
 {
-  GtkWidget *button, *text;
+  GtkWidget *button, *text, *tmp_text;
 
   GdkCursor *clicked_cursor; 
   clicked_cursor = gdk_cursor_new_from_name("pointer", NULL);
@@ -40,6 +40,9 @@ activate (GtkApplication *app, gpointer user_data)
   text = gtk_text_view_new(); 
   gtk_grid_attach(GTK_GRID(application_grid), text, 0, 0, 5, 1); 
   gtk_widget_add_css_class(text, "search-input");
+
+  //tmp_text = gtk_text_new(); 
+  //GtkWidget *tmp_text_buffer = gtk_entry_buffer_new()
 
   event_data.input_field_object = text; 
   event_data.global_grid_object = application_grid; 
