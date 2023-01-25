@@ -39,6 +39,10 @@
   caret-color: @input_text; 
 }
 
+textview {
+  background: transparent; 
+}
+
 .search-button {
   background-image: none; 
   background-color: @input_background; 

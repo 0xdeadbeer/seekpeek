@@ -11,7 +11,7 @@ parse_node(lxb_dom_node_t *node) {
 
     switch (local_name) {
         case LXB_TAG_P: 
-            output_node = gtk_text_new(); 
+            output_node = gtk_text_view_new(); 
             lxb_dom_node_t *child_node = node->first_child;
 
             if (child_node->local_name != 2)
@@ -21,11 +21,17 @@ parse_node(lxb_dom_node_t *node) {
             lxb_char_t *child_text_data = child_text_node->char_data.data.data;
             size_t child_text_length = child_text_node->char_data.data.length; 
 
-            GtkWidget *text_buffer = gtk_entry_buffer_new(child_text_data, child_text_length); 
-            gtk_text_set_buffer(output_node, text_buffer);
+            GtkWidget *text_buffer = gtk_text_buffer_new(NULL); 
+            gtk_text_buffer_set_text(text_buffer, child_text_data, child_text_length);
+            gtk_text_view_set_buffer(output_node, text_buffer);
+            gtk_text_view_set_editable(output_node, (gboolean) FALSE);
+            gtk_text_view_set_cursor_visible(output_node, (gboolean) FALSE);
+            gtk_text_view_set_wrap_mode(output_node, GTK_WRAP_CHAR); 
 
         break;
     }
+
+    
 
     return output_node; 
 }
