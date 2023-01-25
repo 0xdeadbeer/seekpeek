@@ -1,7 +1,6 @@
 #include "fetch.h"
 
-size_t
-html_output_init(html_output *structure) {
+size_t html_output_init(html_output *structure) {
     structure->len = 0; 
     structure->ptr = malloc(structure->len+1); 
 
@@ -13,8 +12,7 @@ html_output_init(html_output *structure) {
     return 0; 
 }
 
-size_t 
-fetch_html_response(void *content, size_t size, size_t nmemb, html_output *html_structure) {
+size_t fetch_html_response(void *content, size_t size, size_t nmemb, html_output *html_structure) {
     html_structure->ptr = realloc(html_structure->ptr, html_structure->len+(size*nmemb)+1);
     if (html_structure->ptr == NULL)
         return 1; 
@@ -26,8 +24,7 @@ fetch_html_response(void *content, size_t size, size_t nmemb, html_output *html_
     return size * nmemb;
 }
 
-char *
-fetch_text_buffer_data(GtkTextBuffer *text_buffer) {
+char *fetch_text_buffer_data(GtkTextBuffer *text_buffer) {
     GtkTextIter text_buffer_start, text_buffer_end; 
 
     gtk_text_buffer_get_start_iter(text_buffer, &text_buffer_start); 
@@ -36,8 +33,7 @@ fetch_text_buffer_data(GtkTextBuffer *text_buffer) {
     return gtk_text_buffer_get_text(text_buffer, &text_buffer_start, &text_buffer_end, FALSE);
 }
 
-void 
-connect_event(GtkButton *self, gpointer user_data) {
+void connect_event(GtkButton *self, gpointer user_data) {
     connect_event_data *event_data = (connect_event_data *) user_data; 
     GtkWidget *dialog, *label, *content_area; 
     int status; 

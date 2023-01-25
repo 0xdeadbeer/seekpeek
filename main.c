@@ -24,8 +24,7 @@ connect_event_data event_data;
 
 // === GLOBAL === 
  
-void 
-activate (GtkApplication *app, gpointer user_data)
+void activate (GtkApplication *app, gpointer user_data)
 {
   GtkWidget *button, *text, *tmp_text;
 
@@ -57,8 +56,7 @@ activate (GtkApplication *app, gpointer user_data)
   gtk_window_present (GTK_WINDOW (window));
 }
 
-void 
-startup(GApplication *application) 
+void startup(GApplication *application) 
 {
   GtkApplication *app = GTK_APPLICATION(application); 
   
@@ -74,8 +72,7 @@ startup(GApplication *application)
   gtk_style_context_add_provider_for_display(display, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 }
 
-int 
-main (int argc, char **argv)
+int main (int argc, char **argv)
 {
   GtkApplication *app;
   int status;
