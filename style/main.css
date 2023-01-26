@@ -54,3 +54,17 @@ textview {
   color: @text; 
   transition: .3s;
 }
+
+.header {
+  font-weight: bolder; 
+}
+
+.header-1 { font-size: 32px; }
+.header-2 { font-size: 24px; }
+.header-3 { font-size: 18.72px; }
+.header-4 { font-size: 16px; }
+.header-5 { font-size: 13.28px; }
+.header-6 { font-size: 10.72px; }
+
+.bold-text { font-weight: bolder; }
+.italic-text { font-style: italic; }
