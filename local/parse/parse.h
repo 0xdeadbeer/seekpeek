@@ -10,6 +10,10 @@
 // statement inside the parse_node function.
 GtkWidget *subparser_p_tag(lxb_dom_node_t *node); 
 GtkWidget *subparser_h_tag(lxb_dom_node_t *node); 
+GtkWidget *subparser_b_tag(lxb_dom_node_t *node); 
+GtkWidget *subparser_i_tag(lxb_dom_node_t *node); 
+GtkWidget *subparser_a_tag(lxb_dom_node_t *node);
+GtkWidget *subparser_img_tag(lxb_dom_node_t *node);
 GtkWidget *subparser_div_tag(lxb_dom_node_t *node); 
 
 GtkWidget *parse_node(lxb_dom_node_t *node); 

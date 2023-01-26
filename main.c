@@ -40,9 +40,6 @@ void activate (GtkApplication *app, gpointer user_data)
   gtk_grid_attach(GTK_GRID(application_grid), text, 0, 0, 5, 1); 
   gtk_widget_add_css_class(text, "search-input");
 
-  //tmp_text = gtk_text_new(); 
-  //GtkWidget *tmp_text_buffer = gtk_entry_buffer_new()
-
   event_data.input_field_object = text; 
   event_data.global_grid_object = application_grid; 
   event_data.global_container_object = html_document_container; 
