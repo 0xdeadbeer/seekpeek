@@ -1,58 +1,54 @@
-/*
- *
- * Color palette: 
- *  - first: #364f6b
- *  - second: #3fc1c9
- *  - third: #f5f5f5
- *  - fourth: #fc5185 
- *  - fifth: #0f0f0f
- *
- *  - text: #f5f5f5
- *  - background: #0f0f0f
- *  - primary: #3fc1c9
- *  - secondary: #364f6b
- *  - err/tertiary: #fc5185
- *
- */
-
-@define-color text #f5f5f5; 
-@define-color background #0f0f0f; 
-@define-color primary #3fc1c9; 
-@define-color secondary #364f6b; 
-@define-color tertiary #fc5185; 
-
-@define-color input_background #525252; 
-@define-color input_text #f5f5f5;
-@define-color input_placeholder #c9c9c9;
-
-.searchbar {
-  padding: 10px;
-}
-
-.search-input {
-  font-size: 15px;
-  background-color: @input_background;  
-  color: @input_text; 
-  border-radius: .2rem; 
-
-  padding: 3px; 
-  caret-color: @input_text; 
-}
+*:focus-visible, *:focus-within { outline: none; outline-width: 0px; }
 
 textview {
   background: transparent; 
+  color: black;
 }
 
-.search-button {
+window {
+  background: white;
+  color: black; 
+}
+
+.search_bar {
+  margin: 10px 0px;
+}
+
+.search_input {
+  font-size: 12px;
+  background-color: white;  
+  color: #08D9D6; 
+  caret-color: #08D9D6; 
+  border: 2px solid #08D9D6;
+  border-radius: 6rem;
+
+  padding: 0px 35px; 
+}
+
+.search_input:focus-visible, .search_input:focus-within {
+  background-color: #08D9D6;  
+  caret-color: white;
+  color: white;
+}
+
+.search_button {
   background-image: none; 
-  background-color: @input_background; 
-  color: @input_text; 
+  background-color: white; 
+  color: #08D9D6; 
+  border: 2.5px solid #08D9D6;
+  border-radius: 6rem; 
 }
 
-.search-button:hover {
-  background-color: @background; 
-  color: @text; 
-  transition: .3s;
+.search_button:focus-visible, .search_button:focus-within, .search_button:hover {
+  background-color: #08D9D6;  
+  color: white; 
+}
+
+.html_container {
+}
+
+.html_container text selection {
+  background: #08D9D6;
 }
 
 .header {
