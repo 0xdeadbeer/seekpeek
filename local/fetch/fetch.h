@@ -10,9 +10,9 @@ extern void parse_structure(lxb_dom_node_t *node, GtkWidget *container);
 static CURL *curl_handle; 
 
 typedef struct{
-    GtkWidget *input_field_object;
-    GtkWidget *global_grid_object;
-    GtkWidget *global_container_object;
+    GtkWidget *search_field;
+    GtkWidget *application_container;
+    GtkWidget *html_container;
 } connect_event_data; 
 
 typedef struct {

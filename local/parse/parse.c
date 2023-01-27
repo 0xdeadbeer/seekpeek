@@ -48,9 +48,9 @@ void parse_structure(lxb_dom_node_t *node, GtkWidget *container) {
     if (DEBUG) 
         printf("Node: %d\n", node->local_name); 
 
-    GtkText *parsed_node = parse_node(node); 
+    GtkWidget *parsed_node = parse_node(node); 
     if (parsed_node != NULL)
-        gtk_box_append(container, parsed_node);
+        gtk_box_append(GTK_BOX(container), parsed_node);
 
     if (node->first_child != NULL) 
         parse_structure(node->first_child, container); 

@@ -16,7 +16,7 @@ static GtkWindow *window;
 static GtkCssProvider *provider; 
 static GdkDisplay *display; 
 
-GtkWidget *application_grid;
+GtkWidget *application_container, *search_container; 
 GtkWidget *html_document_container; 
 connect_event_data event_data; 
 
@@ -26,29 +26,35 @@ connect_event_data event_data;
  
 void activate (GtkApplication *app, gpointer user_data)
 {
-  GtkWidget *button, *text, *tmp_text;
+  GtkWidget *search_button, *search_input;
 
   GdkCursor *clicked_cursor; 
   clicked_cursor = gdk_cursor_new_from_name("pointer", NULL);
 
-  application_grid = gtk_grid_new(); 
-  gtk_window_set_child(GTK_WINDOW(window), application_grid);
-  gtk_widget_add_css_class(application_grid, "searchbar");
-  gtk_grid_set_column_homogeneous(application_grid, TRUE); 
+  application_container = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0); 
+  search_container = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5); 
+  search_input = gtk_entry_new(); 
+  search_button = gtk_button_new_with_label("Connect!");
 
-  text = gtk_text_view_new(); 
-  gtk_grid_attach(GTK_GRID(application_grid), text, 0, 0, 5, 1); 
-  gtk_widget_add_css_class(text, "search-input");
+  gtk_window_set_child(GTK_WINDOW(window), GTK_BOX(application_container));
+  gtk_box_append(GTK_BOX(application_container), search_container); 
 
-  event_data.input_field_object = text; 
-  event_data.global_grid_object = application_grid; 
-  event_data.global_container_object = html_document_container; 
+  gtk_widget_add_css_class(search_container, "search_bar");
+  gtk_widget_set_halign(search_container, GTK_ALIGN_CENTER); 
 
-  button = gtk_button_new_with_label("Connect!");
-  gtk_grid_attach(GTK_GRID(application_grid), button, 5, 0, 1, 1); 
-  gtk_widget_add_css_class(button, "search-button"); 
-  g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(connect_event), &event_data);
-  gtk_widget_set_cursor(button, clicked_cursor); 
+  gtk_box_append(GTK_BOX(search_container), search_input); 
+  gtk_widget_add_css_class(search_input, "search_input");
+  gtk_widget_set_size_request(search_input, 800, 20);
+
+  gtk_box_append(GTK_BOX(search_container), search_button); 
+  gtk_widget_add_css_class(search_button, "search_button"); 
+  g_signal_connect(G_OBJECT(search_button), "clicked", G_CALLBACK(connect_event), &event_data);
+  gtk_widget_set_cursor(search_button, clicked_cursor); 
+  gtk_widget_set_size_request(search_button, 200, 20);
+
+  event_data.search_field = search_input; 
+  event_data.application_container = application_container; 
+  event_data.html_container = html_document_container; 
 
   gtk_window_present (GTK_WINDOW (window));
 }
