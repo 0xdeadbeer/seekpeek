@@ -4,25 +4,20 @@
 #include <gtk/gtk.h>
 #include <curl/curl.h>
 #include <lexbor/html/html.h>
+#include "structs.h"
+#include "../global/resources.h"
 
+extern GtkWidget *application_container; 
+extern GtkWidget *html_document_container;
 extern void parse_structure(lxb_dom_node_t *node, GtkWidget *container);
 
 static CURL *curl_handle; 
 
-typedef struct{
-    GtkWidget *search_field;
-    GtkWidget *application_container;
-    GtkWidget *html_container;
-} connect_event_data; 
-
-typedef struct {
-    char *ptr; 
-    size_t len; 
-} html_output;
-
 size_t html_output_init(html_output *structure); 
 
 size_t fetch_html_response(void *content, size_t size, size_t nmemb, html_output *html_structure); 
+
+void connect_to_url(GtkWidget *self, gpointer user_data);
 
 void connect_event(GtkButton *self, gpointer user_data);
 

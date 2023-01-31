@@ -4,6 +4,7 @@
 #include <gtk/gtk.h>
 #include <lexbor/html/html.h>
 #include <lexbor/dom/interfaces/text.h>
+#include "../global/resources.h"
 
 // Subparsers for all the different types of html nodes.
 // Those are tipically called straight from the switch
