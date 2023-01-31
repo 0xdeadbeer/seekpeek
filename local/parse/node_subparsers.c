@@ -1,5 +1,9 @@
 #include "parse.h"
 #include "../global/environment.h"
+#include "../fetch/structs.h"
+
+extern void connect_to_url(GtkButton *self, gpointer user_data);
+extern connect_event_data event_data;
 
 GtkWidget *subparser_p_tag(lxb_dom_node_t *node) {
     GtkWidget *output_node = gtk_text_view_new(); 
@@ -114,8 +118,35 @@ GtkWidget *subparser_i_tag(lxb_dom_node_t *node) {
 }
 
 GtkWidget *subparser_a_tag(lxb_dom_node_t *node) {
+    GtkWidget *output_node; 
+    
+    GdkCursor *clicked_cursor;
+    clicked_cursor = gdk_cursor_new_from_name("pointer", NULL);
 
-}
+    lxb_dom_node_t *child_node = node->first_child;
+
+    if (child_node->local_name != LXB_TAG__TEXT)
+        return NULL;
+    
+    lxb_dom_text_t *child_text_node= lxb_dom_interface_text(child_node);
+    lxb_char_t *child_text_data = child_text_node->char_data.data.data;
+    size_t child_text_length = child_text_node->char_data.data.length; 
+
+    output_node = gtk_button_new_with_label(child_text_data); 
+    gtk_widget_add_css_class(output_node, "a-link");
+    gtk_widget_set_cursor(output_node, clicked_cursor); 
+    gtk_widget_set_halign(output_node, GTK_ALIGN_START);
+
+    lxb_dom_element_t *element = lxb_dom_interface_element(node); 
+    char *button_link = element->first_attr->value->data;
+    size_t link_length = element->first_attr->value->length;
+
+    resource_struct *url_resource = create_resource(LINK, button_link, link_length); 
+
+    g_signal_connect(output_node, "clicked", connect_to_url, url_resource);
+
+    return output_node; 
+} 
 
 GtkWidget *subparser_img_tag(lxb_dom_node_t *node) {
 

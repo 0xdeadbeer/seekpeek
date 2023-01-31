@@ -33,15 +33,14 @@ char *fetch_text_buffer_data(GtkTextBuffer *text_buffer) {
     return gtk_text_buffer_get_text(text_buffer, &text_buffer_start, &text_buffer_end, FALSE);
 }
 
-void connect_event(GtkButton *self, gpointer user_data) {
-    connect_event_data *event_data = (connect_event_data *) user_data; 
-    GtkWidget *dialog, *label, *content_area; 
+void connect_to_url(GtkWidget *self, gpointer user_data) {
+    resource_struct *resource = (resource_struct *) user_data;
+    if (resource->type != LINK) return;     
+
+
     int status; 
-
-    GtkEntryBuffer *text_buffer = gtk_entry_get_buffer(event_data->search_field);
-    char *url = gtk_entry_buffer_get_text(text_buffer); 
-
     html_output html_response; 
+
     status = html_output_init(&html_response); 
     if (status != 0) {
         printf("Error initializing the html output buffer!\n");
@@ -49,7 +48,7 @@ void connect_event(GtkButton *self, gpointer user_data) {
     }
 
     curl_handle = curl_easy_init(); 
-    curl_easy_setopt(curl_handle, CURLOPT_URL, url); 
+    curl_easy_setopt(curl_handle, CURLOPT_URL, (char *) resource->data); 
     curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, fetch_html_response); 
     curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, &html_response); 
 
@@ -73,14 +72,24 @@ void connect_event(GtkButton *self, gpointer user_data) {
         return; 
     }
 
-    gtk_box_remove(event_data->application_container, event_data->html_container);
-    event_data->html_container = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5); 
-    gtk_widget_add_css_class(event_data->html_container, "html_container"); 
-    gtk_widget_set_size_request(event_data->html_container, 1000, 600);
-    gtk_widget_set_halign(event_data->html_container, GTK_ALIGN_CENTER); 
-    gtk_box_append(event_data->application_container, event_data->html_container);
+    gtk_box_remove(application_container, html_document_container);
+    html_document_container = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5); 
+    gtk_widget_add_css_class(html_document_container, "html_container"); 
+    gtk_widget_set_size_request(html_document_container, 1000, 600);
+    gtk_widget_set_halign(html_document_container, GTK_ALIGN_CENTER); 
+    gtk_box_append(application_container, html_document_container);
 
-    parse_structure(lxb_dom_interface_node(document), event_data->html_container);
+    parse_structure(lxb_dom_interface_node(document), html_document_container);
 
     lxb_html_document_destroy(document);
+}
+
+void connect_event(GtkButton *self, gpointer user_data) {
+    GtkWidget *search_input = (GtkWidget *) user_data; 
+    GtkEntryBuffer *text_buffer = gtk_entry_get_buffer(search_input);
+    char *url = gtk_entry_buffer_get_text(text_buffer); 
+    size_t url_length = gtk_entry_buffer_get_length(text_buffer);
+
+    resource_struct *url_resource = create_resource(LINK, url, url_length);
+    connect_to_url(self, url_resource);
 }
