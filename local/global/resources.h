@@ -21,5 +21,6 @@ typedef enum {
 extern resource_struct *resources;
 resource_struct *create_resource(resource_type type, void *data, size_t data_length); 
 int delete_resource(void *addr); 
+void clear_resources();
 
 #endif 

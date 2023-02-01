@@ -5,6 +5,8 @@ resource_struct *resources;
 resource_struct *create_resource(resource_type type, void *data, size_t data_length) {
     resource_struct *new_resource = malloc(sizeof(resource_struct)); 
     new_resource->type = type; 
+    new_resource->prev = NULL; 
+    new_resource->next = NULL;
     
     new_resource->data = malloc(data_length+1);
     char *resource_data = new_resource->data; 
@@ -21,6 +23,8 @@ resource_struct *create_resource(resource_type type, void *data, size_t data_len
     return new_resource; 
 }
 
+// FIXME: WHAT IF THE RESOURCE IS THE HEAD? 
+// RESOURCES POINTER HAS TO GET UPDATED.
 int delete_resource(void *addr) {
     resource_struct *resource = resources; 
     while (resource != (resource_struct *) addr) {
@@ -40,4 +44,20 @@ int delete_resource(void *addr) {
 
     free(resource);
     return 0; 
+}
+
+void clear_resources() {
+    resource_struct *current_resource = resources;
+    resource_struct *temporary_resource; 
+
+    while (current_resource != NULL) {
+        if (current_resource->prev != NULL)
+            temporary_resource = current_resource->prev; 
+        else temporary_resource = NULL;
+
+        free(current_resource);
+        current_resource = temporary_resource;
+    }
+
+    resources = NULL; 
 }
