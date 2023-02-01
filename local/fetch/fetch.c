@@ -79,6 +79,7 @@ void connect_to_url(GtkWidget *self, gpointer user_data) {
     gtk_widget_set_halign(html_document_container, GTK_ALIGN_CENTER); 
     gtk_box_append(application_container, html_document_container);
 
+    clear_resources(); 
     parse_structure(lxb_dom_interface_node(document), html_document_container);
 
     lxb_html_document_destroy(document);
