@@ -13,7 +13,7 @@
 
 // === GLOBAL GTK ELEMENTS === 
 
-static GtkWindow *window; 
+GtkWindow *window; 
 static GtkCssProvider *provider; 
 static GdkDisplay *display; 
 
