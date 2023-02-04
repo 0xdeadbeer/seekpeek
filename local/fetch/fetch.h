@@ -6,7 +6,9 @@
 #include <lexbor/html/html.h>
 #include "structs.h"
 #include "../global/resources.h"
+#include "../global/global.h"
 
+extern GtkWindow *window;
 extern GtkWidget *application_container; 
 extern GtkWidget *html_document_container;
 extern void parse_structure(lxb_dom_node_t *node, GtkWidget *container);

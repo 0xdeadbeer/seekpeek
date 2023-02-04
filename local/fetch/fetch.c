@@ -37,13 +37,12 @@ void connect_to_url(GtkWidget *self, gpointer user_data) {
     resource_struct *resource = (resource_struct *) user_data;
     if (resource->type != LINK) return;     
 
-
     int status; 
     html_output html_response; 
 
     status = html_output_init(&html_response); 
     if (status != 0) {
-        printf("Error initializing the html output buffer!\n");
+        gui_alert(window, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "Failed to initialize the HTML output buffer");
         return; 
     }
 
@@ -55,20 +54,19 @@ void connect_to_url(GtkWidget *self, gpointer user_data) {
     status = curl_easy_perform(curl_handle);
     curl_easy_cleanup(curl_handle); 
     if (CURLE_OK != status) {
-        printf("Failed fetching the website\n");
-        printf("Error: %s\n", curl_easy_strerror(status));
+        gui_alert(window, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "Failed fetching the website");
         return;
     }
 
     lxb_html_document_t *document = lxb_html_document_create(); 
     if (document == NULL) {
-        printf("Failed creating a document\n");
+        gui_alert(window, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "Failed creating a document");
         return; 
     }
     
     status = lxb_html_document_parse(document, html_response.ptr, html_response.len);
     if (status != LXB_STATUS_OK) {
-        printf("Failed to parse HTML\n");
+        gui_alert(window, GTK_MESSAGE_ERROR , GTK_BUTTONS_CLOSE, "Failed to parse HTML"); 
         return; 
     }
 
