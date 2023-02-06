@@ -18,7 +18,7 @@ static GtkCssProvider *provider;
 static GdkDisplay *display; 
 
 GtkWidget *application_container, *search_container; 
-GtkWidget *html_document_container; 
+GtkWidget *html_document_container = NULL; 
 // connect_event_data event_data; 
 
 // === GLOBAL GTK ELEMENTS === 
@@ -38,7 +38,7 @@ void activate (GtkApplication *app, gpointer user_data)
   search_button = gtk_button_new_with_label("Connect!");
 
   gtk_window_set_child(GTK_WINDOW(window), GTK_BOX(application_container));
-  gtk_box_append(GTK_BOX(application_container), search_container); 
+  gtk_box_append(GTK_BOX(application_container), GTK_BOX(search_container)); 
 
   gtk_widget_add_css_class(search_container, "search_bar");
   gtk_widget_set_halign(search_container, GTK_ALIGN_CENTER); 
