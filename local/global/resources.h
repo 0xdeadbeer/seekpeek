@@ -15,7 +15,8 @@ typedef struct {
 
 typedef enum {
     UNKNOWN,
-    LINK
+    LINK, 
+    IMAGE_SRC
 } resource_type; 
 
 extern resource_struct *resources;
