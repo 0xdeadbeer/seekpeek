@@ -44,11 +44,9 @@ window {
   color: white; 
 }
 
-.html_container {
-}
-
-.html_container text selection {
+.html_container label selection {
   background: #08D9D6;
+  color: white;
 }
 
 .header {

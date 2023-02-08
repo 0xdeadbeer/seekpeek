@@ -18,7 +18,7 @@ static GtkCssProvider *provider;
 static GdkDisplay *display; 
 
 GtkWidget *application_container, *search_container; 
-GtkWidget *html_document_container = NULL; 
+GtkWidget *html_document_container = NULL, *scrolled_window; 
 // connect_event_data event_data; 
 
 // === GLOBAL GTK ELEMENTS === 
@@ -53,7 +53,19 @@ void activate (GtkApplication *app, gpointer user_data)
   gtk_widget_set_cursor(search_button, clicked_cursor); 
   gtk_widget_set_size_request(search_button, 200, 20);
 
+  html_document_container = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0); 
+  gtk_widget_add_css_class(html_document_container, "html_container"); 
+  gtk_widget_set_halign(html_document_container, GTK_ALIGN_CENTER); 
+
+  scrolled_window = gtk_scrolled_window_new ();
+  gtk_scrolled_window_set_child(scrolled_window, html_document_container);
+  gtk_box_append(GTK_BOX(application_container), scrolled_window);
+
+  gtk_scrolled_window_set_min_content_height(scrolled_window, 800);
+  gtk_widget_set_size_request(html_document_container, 1000, 800);
+
   gtk_window_present (GTK_WINDOW (window));
+  gtk_widget_show(window);
 }
 
 void startup(GApplication *application) 

@@ -71,19 +71,15 @@ void connect_to_url(GtkWidget *self, gpointer user_data) {
         return; 
     }
 
-    if (html_document_container != NULL)
-        gtk_box_remove(application_container, html_document_container);
-
-    html_document_container = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0); 
-    gtk_widget_add_css_class(html_document_container, "html_container"); 
-    gtk_widget_set_size_request(html_document_container, 1000, 600);
-    gtk_widget_set_halign(html_document_container, GTK_ALIGN_CENTER); 
+    GtkWidget *child = gtk_widget_get_first_child(html_document_container);
+    while (child != NULL) {
+        gtk_box_remove(html_document_container, child); 
+        child = gtk_widget_get_first_child(html_document_container);
+    }
 
     clear_resources(); 
     parse_structure(lxb_dom_interface_node(document), html_document_container);
  
-    gtk_box_append(GTK_BOX(application_container), GTK_BOX(html_document_container));
-
     lxb_html_document_destroy(document);
 }
 
