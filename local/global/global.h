@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <gtk/gtk.h>
 
-void gui_alert(GtkWindow *window, GtkMessageType text_type, GtkButtonsType buttons, char *text); 
+extern GtkWindow *window;
+
+void gui_alert(GtkMessageType text_type, GtkButtonsType buttons, char *text); 
 
 #endif 
