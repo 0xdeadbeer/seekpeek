@@ -93,6 +93,7 @@ void activate (GtkApplication *app, gpointer user_data)
   gtk_widget_add_css_class(tabs_notebook, "tabs_notebook"); 
   gtk_widget_set_vexpand(tabs_notebook, FALSE);
   gtk_box_append(GTK_BOX(application_container), tabs_notebook); 
+  gtk_notebook_set_scrollable(tabs_notebook, TRUE);
 
   // create initial tab
   GtkWidget *html_document_container = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0); 
