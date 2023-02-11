@@ -8,8 +8,7 @@
 #include "../global/resources.h"
 #include "../global/global.h"
 
-extern GtkWidget *tabs_notebook;
-extern GtkWidget *application_container; 
+extern GtkWidget *search_input, *tabs_notebook, *application_container;
 extern void parse_structure(lxb_dom_node_t *node, GtkWidget *container);
 static CURL *curl_handle; 
 
