@@ -76,8 +76,11 @@ void connect_to_url(GtkWidget *self, gpointer user_data) {
         return; 
     }
 
-    GtkWidget *html_container = resource->html_container;
+    // empty the search buffer
+    GtkEntryBuffer *empty_search = gtk_entry_buffer_new(NULL, -1);
+    gtk_entry_set_buffer(search_input, empty_search);
 
+    GtkWidget *html_container = resource->html_container;
     GtkWidget *child = gtk_widget_get_first_child(html_container);
     while (child != NULL) {
         gtk_box_remove(html_container, child); 

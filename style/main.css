@@ -61,11 +61,11 @@ window {
   color: black;
 }
 
-.html_container *:focus-visible {
+/* .html_container *:focus-visible {
   background: #4ecca2a8;
   color: white;
   border-radius: .4rem; 
-}
+} */
 
 .header {
   font-weight: bolder; 
