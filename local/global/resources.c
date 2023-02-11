@@ -1,12 +1,14 @@
 #include "resources.h"
 
-resource_struct *resources;
+resource_struct *start_resource = NULL;
+resource_struct *end_resource = NULL;
 
-resource_struct *create_resource(resource_type type, void *data, size_t data_length) {
+resource_struct *create_resource(resource_type type, void *data, size_t data_length, void *html_container) {
     resource_struct *new_resource = malloc(sizeof(resource_struct)); 
     new_resource->type = type; 
     new_resource->prev = NULL; 
     new_resource->next = NULL;
+    new_resource->html_container = html_container;
     
     new_resource->data = malloc(data_length+1);
     char *resource_data = new_resource->data; 
@@ -14,40 +16,20 @@ resource_struct *create_resource(resource_type type, void *data, size_t data_len
 
     resource_data[data_length] = '\0';
 
-    if (resources != NULL) {
-        resources->next = new_resource; 
-        new_resource->prev = resources; 
+    if (end_resource != NULL) {
+        end_resource->next = new_resource; 
+        new_resource->prev = end_resource; 
+    } else {
+        start_resource = new_resource;
     }
 
-    resources = new_resource; 
+    end_resource = new_resource; 
+
     return new_resource; 
 }
 
-// FIXME: WHAT IF THE RESOURCE IS THE HEAD? 
-// RESOURCES POINTER HAS TO GET UPDATED.
-int delete_resource(void *addr) {
-    resource_struct *resource = resources; 
-    while (resource != (resource_struct *) addr) {
-        if (resources->prev == NULL) return -1; 
-        resource = (resource_struct *) resources->prev; 
-    }
-
-    if (resource->next != NULL) {
-        resource_struct *next_resource = (resource_struct *) resource->next;
-        next_resource->prev = (resource_struct *) resource->prev; 
-    }
-    
-    if (resource->prev != NULL) {
-        resource_struct *prev_resource = (resource_struct *) resource->prev; 
-        prev_resource->next = (resource_struct *) resource->next; 
-    }
-
-    free(resource);
-    return 0; 
-}
-
 void clear_resources() {
-    resource_struct *current_resource = resources;
+    resource_struct *current_resource = end_resource;
     resource_struct *temporary_resource; 
 
     while (current_resource != NULL) {
@@ -59,5 +41,39 @@ void clear_resources() {
         current_resource = temporary_resource;
     }
 
-    resources = NULL; 
+    end_resource = NULL; 
+    start_resource = NULL;
+}
+
+void clear_resource(resource_struct *resource) {
+    resource_struct *next_resource = resource->next;
+    resource_struct *prev_resource = resource->prev; 
+
+    if (prev_resource != NULL)
+        prev_resource->next = next_resource; 
+    if (next_resource != NULL)
+        next_resource->prev = prev_resource;
+
+    if (resource == start_resource)
+        start_resource = resource->next; 
+
+    free(resource->data); 
+    free(resource);
+
+    
+    // end_resource = NULL;
+}
+
+void clear_resources_by_html_container(void *html_container) {
+    resource_struct *current_resource = start_resource; 
+    resource_struct *temporary_resource; 
+
+    while (current_resource != NULL) {
+        temporary_resource = current_resource->next; 
+
+        if (current_resource->html_container == html_container)
+            clear_resource(current_resource);
+
+        current_resource = temporary_resource; 
+    }
 }

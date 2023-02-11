@@ -6,8 +6,8 @@ textview {
 }
 
 window {
-  background: white;
-  color: black; 
+  background: #232931;
+  color: white; 
 }
 
 .search_bar {
@@ -16,37 +16,49 @@ window {
 
 .search_input {
   font-size: 12px;
-  background-color: white;  
-  color: #08D9D6; 
-  caret-color: #08D9D6; 
-  border: 2px solid #08D9D6;
-  border-radius: 6rem;
+  background-color: #4ecca232;  
+  color: #EEEEEE; 
+  caret-color: #EEEEEE; 
+  border: 2px solid #4ECCA3;
+  /* border-radius: 6rem; */
+  border-radius: 1rem; 
 
   padding: 0px 35px; 
 }
 
 .search_input:focus-visible, .search_input:focus-within {
-  background-color: #08D9D6;  
+  background-color: #4ecca275;  
   caret-color: white;
   color: white;
 }
 
-.search_button {
-  background-image: none; 
-  background-color: white; 
-  color: #08D9D6; 
-  border: 2.5px solid #08D9D6;
-  border-radius: 6rem; 
-}
-
-.search_button:focus-visible, .search_button:focus-within, .search_button:hover {
-  background-color: #08D9D6;  
+.search_input selection {
+  background: #4ECCA3; 
   color: white; 
 }
 
+.search_button {
+  background-image: none; 
+  background-color: #4ecca232; 
+  color: white; 
+  border: 2.5px solid #4ECCA3;
+  border-radius: 1rem; 
+}
+
+.search_button:focus-visible, .search_button:focus-within, .search_button:hover {
+  background-color: #4ecca275;  
+  color: white; 
+}
+
+.html_container {
+  background: white;
+  color: black;
+  padding: 0px 50px;
+}
+
 .html_container label selection {
-  background: #08D9D6;
-  color: white;
+  background: #4ecca2a8;
+  color: black;
 }
 
 .header {
@@ -69,4 +81,38 @@ window {
   text-decoration: underline;
   border: none;
   box-shadow: none;
+}
+
+.tabs_notebook {
+  border: none; 
+}
+
+.tabs_notebook header.top {
+  background: transparent; 
+  color: white; 
+  padding: 10px 0px;
+}
+
+.tabs_notebook header.top tabs tab {
+  color: white;
+  background: #4ecca279;
+  border-radius: .2em; 
+  margin-bottom: 5px;
+  outline: none;
+  border: unset; 
+  box-shadow: unset; 
+  border-bottom: 3px solid #4ecca2c0;  
+  padding: 0px 20px;
+}
+
+.tabs_notebook header.top tabs tab:checked {
+  background: #4ecca2c4;
+  box-shadow: unset; 
+  border: unset; 
+  outline: none;
+  border-bottom: 3px solid #4ecca2c4;  
+}
+
+.tabs_notebook tab .button {
+  border-radius: 3rem;
 }

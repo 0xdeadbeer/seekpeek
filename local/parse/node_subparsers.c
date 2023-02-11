@@ -1,8 +1,10 @@
 #include <curl/curl.h>
 #include <time.h>
 #include "parse.h"
+
 #include "../global/environment.h"
 #include "../fetch/structs.h"
+#include "./node_subparsers/img/img_node_subparser.h"
 
 extern void connect_to_url(GtkButton *self, gpointer user_data);
 extern connect_event_data event_data;
@@ -131,63 +133,29 @@ GtkWidget *subparser_a_tag(lxb_dom_node_t *node) {
     char *link_attr = element->first_attr->value->data;
     size_t attr_length = element->first_attr->value->length;
 
-    resource_struct *url_resource = create_resource(LINK, link_attr, attr_length); 
+    int current_page = gtk_notebook_get_current_page(tabs_notebook);
+    GtkWidget *scroll_element = gtk_notebook_get_nth_page(tabs_notebook, current_page); 
+    GtkWidget *view_port = gtk_scrolled_window_get_child(scroll_element);
+    GtkWidget *html_container = gtk_viewport_get_child(view_port);
+
+    resource_struct *url_resource = create_resource(LINK, link_attr, attr_length, html_container); 
 
     g_signal_connect(output_node, "clicked", connect_to_url, url_resource);
 
     return output_node; 
 } 
 
-size_t save_picture(void *ptr, size_t size, size_t nmemb, void *stream) {
-    size_t written = fwrite(ptr, size, nmemb, (FILE *) stream);
-    return written;
-}
-
-void download_image(char *url, char *location) {
-    CURL *curl_handle = curl_easy_init(); 
-    FILE *pagefile; 
-
-    curl_easy_setopt(curl_handle, CURLOPT_URL, url);
-    curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, save_picture); 
-
-    pagefile = fopen(location, "wb");   
-    if (pagefile) {
-        curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, pagefile); 
-        curl_easy_perform(curl_handle); 
-        fclose(pagefile);
-    }
-
-    curl_easy_cleanup(curl_handle);
-
-    return 1;
-}
-
-char *generate_filename(int length) {
-    srand(time(NULL) + clock() + getpid());
-
-    char *string = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	const size_t string_length = 62;
-
-	char *result = malloc(sizeof(char) * (length +1));
-	if(!result) {
-		return (char*)0;
-	}
-	unsigned int key = 0;
-	for(int index = 0;index<length;index++) {
-		key = rand() % string_length;
-		result[index] = string[key];
-	}
-	result[length] = '\0';
-	return result;
-}
-
 GtkWidget *subparser_img_tag(lxb_dom_node_t *node) {
-
     lxb_dom_element_t *element = lxb_dom_interface_element(node); 
     unsigned char *src_attr = element->first_attr->value->data;
     size_t attr_length = element->first_attr->value->length;
 
-    resource_struct *src_resource = create_resource(IMAGE_SRC, src_attr, attr_length); 
+    int current_page = gtk_notebook_get_current_page(tabs_notebook);
+    GtkWidget *scroll_element = gtk_notebook_get_nth_page(tabs_notebook, current_page); 
+    GtkWidget *view_port = gtk_scrolled_window_get_child(scroll_element);
+    GtkWidget *html_container = gtk_viewport_get_child(view_port);
+
+    resource_struct *src_resource = create_resource(IMAGE_SRC, src_attr, attr_length, html_container); 
 
     char *filename = generate_filename(90);
     char *folder = "./resources/"; 
@@ -196,10 +164,9 @@ GtkWidget *subparser_img_tag(lxb_dom_node_t *node) {
     strcpy(location, folder);
     strcat(location, filename);
 
-    download_image(src_attr, location); 
+    download_picture(src_attr, location); 
 
     GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(location, NULL);
-
     GtkWidget *output_node = gtk_picture_new_for_pixbuf(pixbuf);
 
     gtk_widget_add_css_class(output_node, "image");

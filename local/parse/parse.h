@@ -6,6 +6,8 @@
 #include <lexbor/dom/interfaces/text.h>
 #include "../global/resources.h"
 
+extern GtkWidget *tabs_notebook;
+
 // Subparsers for all the different types of html nodes.
 // Those are tipically called straight from the switch
 // statement inside the parse_node function.
