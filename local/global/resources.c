@@ -59,9 +59,6 @@ void clear_resource(resource_struct *resource) {
 
     free(resource->data); 
     free(resource);
-
-    
-    // end_resource = NULL;
 }
 
 void clear_resources_by_html_container(void *html_container) {
