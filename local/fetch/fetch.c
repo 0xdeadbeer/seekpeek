@@ -93,6 +93,52 @@ void connect_to_url(GtkWidget *self, gpointer user_data) {
     lxb_html_document_destroy(document);
 }
 
+void connect_to_file(char *filename, void *html_container) {
+
+    void *status;
+    FILE *file_pointer = fopen(filename, "rw"); 
+
+    if (file_pointer == NULL) {
+        gui_alert(GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "Failed creating a file pointer");
+        return;
+    }
+
+    fseek(file_pointer, 0L, SEEK_END);
+    size_t file_output_length = ftell(file_pointer);
+
+    rewind(file_pointer);
+
+    char *file_output = malloc(file_output_length);
+    size_t read_count = fread(file_output, file_output_length+1, 1, file_pointer);
+
+    lxb_html_document_t *document = lxb_html_document_create(); 
+    if (document == NULL) {
+        gui_alert(GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "Failed creating a document");
+        return; 
+    }
+    
+    status = lxb_html_document_parse(document, file_output, file_output_length);
+    if (status != LXB_STATUS_OK) {
+        gui_alert(GTK_MESSAGE_ERROR , GTK_BUTTONS_CLOSE, "Failed to parse HTML"); 
+        return; 
+    }
+
+    // empty the search buffer
+    GtkEntryBuffer *empty_search = gtk_entry_buffer_new(NULL, -1);
+    gtk_entry_set_buffer(search_input, empty_search);
+
+    GtkWidget *child = gtk_widget_get_first_child(html_container);
+    while (child != NULL) {
+        gtk_box_remove(html_container, child); 
+        child = gtk_widget_get_first_child(html_container);
+    }
+
+    clear_resources_by_html_container(html_container); 
+    parse_structure(lxb_dom_interface_node(document), html_container);
+ 
+    lxb_html_document_destroy(document);
+}
+
 void connect_event(GtkButton *self, gpointer user_data) {
     GtkWidget *search_input = (GtkWidget *) user_data; 
     GtkEntryBuffer *text_buffer = gtk_entry_get_buffer(search_input);

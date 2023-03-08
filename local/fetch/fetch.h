@@ -17,6 +17,7 @@ size_t html_output_init(html_output *structure);
 size_t fetch_html_response(void *content, size_t size, size_t nmemb, html_output *html_structure); 
 
 void connect_to_url(GtkWidget *self, gpointer user_data);
+void connect_to_file(char *filename, void *html_container);
 
 void connect_event(GtkButton *self, gpointer user_data);
 
