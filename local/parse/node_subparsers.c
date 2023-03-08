@@ -9,7 +9,7 @@
 extern void connect_to_url(GtkButton *self, gpointer user_data);
 extern connect_event_data event_data;
 
-GtkWidget *subparser_p_tag(lxb_dom_node_t *node) {
+GtkWidget *node_subparser_p_tag(lxb_dom_node_t *node) {
     lxb_dom_node_t *child_node = node->first_child;
 
     if (child_node->local_name != LXB_TAG__TEXT)
@@ -28,7 +28,7 @@ GtkWidget *subparser_p_tag(lxb_dom_node_t *node) {
     return output_node; 
 }
 
-GtkWidget *subparser_h_tag(lxb_dom_node_t *node) {
+GtkWidget *node_subparser_h_tag(lxb_dom_node_t *node) {
     lxb_dom_node_t *child_node = node->first_child;
 
     if (child_node->local_name != LXB_TAG__TEXT)
@@ -69,7 +69,7 @@ GtkWidget *subparser_h_tag(lxb_dom_node_t *node) {
     return output_node; 
 }
 
-GtkWidget *subparser_b_tag(lxb_dom_node_t *node) {
+GtkWidget *node_subparser_b_tag(lxb_dom_node_t *node) {
     lxb_dom_node_t *child_node = node->first_child;
 
     if (child_node->local_name != LXB_TAG__TEXT)
@@ -89,7 +89,7 @@ GtkWidget *subparser_b_tag(lxb_dom_node_t *node) {
     return output_node; 
 }
 
-GtkWidget *subparser_i_tag(lxb_dom_node_t *node) {
+GtkWidget *node_subparser_i_tag(lxb_dom_node_t *node) {
     lxb_dom_node_t *child_node = node->first_child;
 
     if (child_node->local_name != LXB_TAG__TEXT)
@@ -109,7 +109,7 @@ GtkWidget *subparser_i_tag(lxb_dom_node_t *node) {
     return output_node; 
 }
 
-GtkWidget *subparser_a_tag(lxb_dom_node_t *node) {
+GtkWidget *node_subparser_a_tag(lxb_dom_node_t *node) {
     GtkWidget *output_node; 
     
     GdkCursor *clicked_cursor;
@@ -133,6 +133,8 @@ GtkWidget *subparser_a_tag(lxb_dom_node_t *node) {
     char *link_attr = element->first_attr->value->data;
     size_t attr_length = element->first_attr->value->length;
 
+    printf("First attribute location '%p', next attribute location '%p'\n", element->first_attr, element->first_attr->next);
+
     int current_page = gtk_notebook_get_current_page(tabs_notebook);
     GtkWidget *scroll_element = gtk_notebook_get_nth_page(tabs_notebook, current_page); 
     GtkWidget *view_port = gtk_scrolled_window_get_child(scroll_element);
@@ -145,7 +147,7 @@ GtkWidget *subparser_a_tag(lxb_dom_node_t *node) {
     return output_node; 
 } 
 
-GtkWidget *subparser_img_tag(lxb_dom_node_t *node) {
+GtkWidget *node_subparser_img_tag(lxb_dom_node_t *node) {
     lxb_dom_element_t *element = lxb_dom_interface_element(node); 
     unsigned char *src_attr = element->first_attr->value->data;
     size_t attr_length = element->first_attr->value->length;
@@ -176,8 +178,4 @@ GtkWidget *subparser_img_tag(lxb_dom_node_t *node) {
     free(location);
     free(filename);
     return output_node; 
-}
-
-GtkWidget *subparser_div_tag(lxb_dom_node_t *node) {
-
 }

@@ -109,6 +109,9 @@ void activate (GtkApplication *app, gpointer user_data)
   gtk_notebook_append_page(tabs_notebook, scrolled_window, NULL);
   gtk_notebook_popup_enable(tabs_notebook);  
 
+  // enter the homepage of the browser
+  connect_to_file("./media/homepage.html", html_document_container); 
+
   gtk_window_present (GTK_WINDOW (window));
   gtk_widget_show(window);
 }
@@ -144,7 +147,7 @@ int main (int argc, char **argv)
   // perform regular startup
   curl_global_init(CURL_GLOBAL_ALL); 
 
-  app = gtk_application_new ("org.osamu-sp.seekpeek", G_APPLICATION_DEFAULT_FLAGS);
+  app = gtk_application_new("org.osamu-sp.seekpeek", G_APPLICATION_DEFAULT_FLAGS);
   g_signal_connect(app, "startup", G_CALLBACK(startup), NULL);
   g_signal_connect(app, "activate", G_CALLBACK (activate), NULL);
   status = g_application_run (G_APPLICATION (app), argc, argv);
