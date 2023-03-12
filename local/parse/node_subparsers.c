@@ -24,7 +24,7 @@ GtkWidget *node_subparser_p_tag(lxb_dom_node_t *node) {
     gtk_label_set_wrap_mode(output_node, PANGO_WRAP_CHAR); 
     gtk_widget_set_halign(output_node, GTK_ALIGN_START);
     gtk_label_set_selectable(output_node, TRUE);
-
+    
     return output_node; 
 }
 
@@ -179,3 +179,63 @@ GtkWidget *node_subparser_img_tag(lxb_dom_node_t *node) {
     free(filename);
     return output_node; 
 }
+
+GtkWidget *node_subparser_ul_tag(lxb_dom_node_t *node) {
+    GtkWidget *output_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0); 
+
+    for (lxb_dom_node_t *child_node = node->first_child; child_node != NULL; child_node = child_node->next) {
+        if (child_node->local_name != LXB_TAG_LI) 
+            continue;
+
+        if (child_node->first_child->local_name != LXB_TAG__TEXT)
+            continue;
+
+        lxb_dom_text_t *child_text_node = lxb_dom_interface_text(child_node->first_child);
+        lxb_char_t *child_text_data = child_text_node->char_data.data.data;
+
+        char *output_text = NULL;
+        asprintf(&output_text, "  • %s", child_text_data);
+
+        GtkWidget *output_node = gtk_label_new(output_text);
+        gtk_label_set_wrap(output_node, TRUE); 
+        gtk_label_set_wrap_mode(output_node, PANGO_WRAP_CHAR); 
+        gtk_widget_set_halign(output_node, GTK_ALIGN_START);
+        gtk_label_set_selectable(output_node, TRUE);
+
+        gtk_box_append(output_box, output_node);
+    }
+
+    return output_box;
+}
+
+GtkWidget *node_subparser_ol_tag(lxb_dom_node_t *node) {
+    GtkWidget *output_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0); 
+    int li_iterations = 1;
+
+    for (lxb_dom_node_t *child_node = node->first_child; child_node != NULL; child_node = child_node->next) {
+        if (child_node->local_name != LXB_TAG_LI) 
+            continue;
+
+        if (child_node->first_child->local_name != LXB_TAG__TEXT)
+            continue;
+
+        lxb_dom_text_t *child_text_node = lxb_dom_interface_text(child_node->first_child);
+        lxb_char_t *child_text_data = child_text_node->char_data.data.data;
+
+        char *output_text = NULL;
+        asprintf(&output_text, "  %d. %s", li_iterations, child_text_data);
+
+        GtkWidget *output_node = gtk_label_new(output_text);
+        gtk_label_set_wrap(output_node, TRUE); 
+        gtk_label_set_wrap_mode(output_node, PANGO_WRAP_CHAR); 
+        gtk_widget_set_halign(output_node, GTK_ALIGN_START);
+        gtk_label_set_selectable(output_node, TRUE);
+
+        gtk_box_append(output_box, output_node);
+
+        li_iterations++;
+    }
+
+    return output_box;
+}
+

@@ -17,6 +17,8 @@ GtkWidget *node_subparser_b_tag(lxb_dom_node_t *node);
 GtkWidget *node_subparser_i_tag(lxb_dom_node_t *node); 
 GtkWidget *node_subparser_a_tag(lxb_dom_node_t *node);
 GtkWidget *node_subparser_img_tag(lxb_dom_node_t *node);
+GtkWidget *node_subparser_ul_tag(lxb_dom_node_t *node);
+GtkWidget *node_subparser_ol_tag(lxb_dom_node_t *node);
 
 GtkWidget *parse_node(lxb_dom_node_t *node); 
 void parse_structure(lxb_dom_node_t *node, GtkWidget *container); 
