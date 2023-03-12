@@ -38,6 +38,14 @@ GtkWidget *parse_node(lxb_dom_node_t *node) {
             output_node = node_subparser_img_tag(node);
         break; 
 
+        case LXB_TAG_UL: 
+            output_node = node_subparser_ul_tag(node);
+        break; 
+
+        case LXB_TAG_OL: 
+            output_node = node_subparser_ol_tag(node);
+        break;
+
     }
 
     return output_node; 
