@@ -9,17 +9,25 @@
 extern void connect_to_url(GtkButton *self, gpointer user_data);
 extern connect_event_data event_data;
 
-GtkWidget *node_subparser_p_tag(lxb_dom_node_t *node) {
-    lxb_dom_node_t *child_node = node->first_child;
+GtkWidget *node_subparser_body_tag(lxb_dom_node_t *node) {
+    GtkWidget *output_node = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0); 
+    for (lxb_dom_node_t *child_node = node->first_child; child_node != NULL; child_node = child_node->next) 
+        gtk_box_append(output_node, parse_node(child_node));
 
-    if (child_node->local_name != LXB_TAG__TEXT)
+    return output_node;
+}
+
+GtkWidget *node_subparser_text_tag(lxb_dom_node_t *node) {
+    lxb_dom_text_t *text_node = lxb_dom_interface_text(node);
+    lxb_char_t *node_data = text_node->char_data.data.data;
+    size_t data_length = text_node->char_data.data.length;
+
+    if (empty_string(node_data, data_length))     
         return NULL;
 
-    lxb_dom_text_t *child_text_node= lxb_dom_interface_text(child_node);
-    lxb_char_t *child_text_data = child_text_node->char_data.data.data;
-    size_t child_text_length = child_text_node->char_data.data.length; 
+    printf("Elaborating text node -> '%s' with content size set to %d\n", node_data, data_length);
 
-    GtkWidget *output_node = gtk_label_new(child_text_data); 
+    GtkWidget *output_node = gtk_label_new(node_data); 
     gtk_label_set_wrap(output_node, TRUE);
     gtk_label_set_wrap_mode(output_node, PANGO_WRAP_CHAR); 
     gtk_widget_set_halign(output_node, GTK_ALIGN_START);
@@ -28,21 +36,18 @@ GtkWidget *node_subparser_p_tag(lxb_dom_node_t *node) {
     return output_node; 
 }
 
+GtkWidget *node_subparser_p_tag(lxb_dom_node_t *node) {
+    GtkWidget *output_node = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    for (lxb_dom_node_t *child_node = node->first_child; child_node != NULL; child_node = child_node->next)
+        gtk_box_append(output_node, parse_node(child_node));
+
+    return output_node; 
+}
+
 GtkWidget *node_subparser_h_tag(lxb_dom_node_t *node) {
-    lxb_dom_node_t *child_node = node->first_child;
-
-    if (child_node->local_name != LXB_TAG__TEXT)
-        return NULL;
-    
-    lxb_dom_text_t *child_text_node= lxb_dom_interface_text(child_node);
-    lxb_char_t *child_text_data = child_text_node->char_data.data.data;
-    size_t child_text_length = child_text_node->char_data.data.length; 
-
-    GtkWidget *output_node = gtk_label_new(child_text_data); 
-    gtk_label_set_wrap(output_node, TRUE);
-    gtk_label_set_wrap_mode(output_node, PANGO_WRAP_CHAR); 
-    gtk_widget_set_halign(output_node, GTK_ALIGN_START);
-    gtk_label_set_selectable(output_node, TRUE);
+    GtkWidget *output_node = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0); 
+    for (lxb_dom_node_t *child_node = node->first_child; child_node != NULL; child_node = child_node->next)
+        gtk_box_append(output_node, parse_node(child_node)); 
 
     gtk_widget_add_css_class(output_node, "header"); 
     switch (node->local_name) {
@@ -70,40 +75,20 @@ GtkWidget *node_subparser_h_tag(lxb_dom_node_t *node) {
 }
 
 GtkWidget *node_subparser_b_tag(lxb_dom_node_t *node) {
-    lxb_dom_node_t *child_node = node->first_child;
+    GtkWidget *output_node = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0); 
+    for (lxb_dom_node_t *child_node = node->first_child; child_node != NULL; child_node = child_node->next) 
+        gtk_box_append(output_node, parse_node(child_node));    
 
-    if (child_node->local_name != LXB_TAG__TEXT)
-        return NULL;
-    
-    lxb_dom_text_t *child_text_node= lxb_dom_interface_text(child_node);
-    lxb_char_t *child_text_data = child_text_node->char_data.data.data;
-    size_t child_text_length = child_text_node->char_data.data.length; 
-
-    GtkWidget *output_node = gtk_label_new(child_text_data); 
-    gtk_label_set_wrap(output_node, TRUE);
-    gtk_label_set_wrap_mode(output_node, PANGO_WRAP_CHAR); 
-    gtk_widget_set_halign(output_node, GTK_ALIGN_START);
-    gtk_label_set_selectable(output_node, TRUE);
     gtk_widget_add_css_class(output_node, "bold-text");
 
     return output_node; 
 }
 
 GtkWidget *node_subparser_i_tag(lxb_dom_node_t *node) {
-    lxb_dom_node_t *child_node = node->first_child;
+    GtkWidget *output_node = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0); 
+    for (lxb_dom_node_t *child_node = node->first_child; child_node != NULL; child_node = child_node->next)
+        gtk_box_append(output_node, parse_node(child_node));
 
-    if (child_node->local_name != LXB_TAG__TEXT)
-        return NULL;
-    
-    lxb_dom_text_t *child_text_node= lxb_dom_interface_text(child_node);
-    lxb_char_t *child_text_data = child_text_node->char_data.data.data;
-    size_t child_text_length = child_text_node->char_data.data.length; 
-
-    GtkWidget *output_node = gtk_label_new(child_text_data); 
-    gtk_label_set_wrap(output_node, TRUE);
-    gtk_label_set_wrap_mode(output_node, PANGO_WRAP_CHAR);
-    gtk_widget_set_halign(output_node, GTK_ALIGN_START);
-    gtk_label_set_selectable(output_node, TRUE);
     gtk_widget_add_css_class(output_node, "italic-text");
 
     return output_node; 
@@ -132,8 +117,6 @@ GtkWidget *node_subparser_a_tag(lxb_dom_node_t *node) {
     lxb_dom_element_t *element = lxb_dom_interface_element(node); 
     char *link_attr = element->first_attr->value->data;
     size_t attr_length = element->first_attr->value->length;
-
-    printf("First attribute location '%p', next attribute location '%p'\n", element->first_attr, element->first_attr->next);
 
     int current_page = gtk_notebook_get_current_page(tabs_notebook);
     GtkWidget *scroll_element = gtk_notebook_get_nth_page(tabs_notebook, current_page); 
@@ -180,29 +163,35 @@ GtkWidget *node_subparser_img_tag(lxb_dom_node_t *node) {
     return output_node; 
 }
 
+GtkWidget *node_subparser_li_tag(lxb_dom_node_t *node) {
+    GtkWidget *output_node = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0); 
+    for (lxb_dom_node_t *child_node = node->first_child; child_node != NULL; child_node = child_node->next)
+        gtk_box_append(output_node, parse_node(child_node)); 
+    
+    return output_node; 
+}
+
 GtkWidget *node_subparser_ul_tag(lxb_dom_node_t *node) {
     GtkWidget *output_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0); 
 
     for (lxb_dom_node_t *child_node = node->first_child; child_node != NULL; child_node = child_node->next) {
-        if (child_node->local_name != LXB_TAG_LI) 
+        GtkWidget *ul_line_content = parse_node(child_node);
+        if (ul_line_content == NULL)
             continue;
 
-        if (child_node->first_child->local_name != LXB_TAG__TEXT)
-            continue;
+        GtkWidget *ul_line_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 
-        lxb_dom_text_t *child_text_node = lxb_dom_interface_text(child_node->first_child);
-        lxb_char_t *child_text_data = child_text_node->char_data.data.data;
+        char *bullet_point_text = "  • ";
+        GtkWidget *bullet_point = gtk_label_new(bullet_point_text);
+        gtk_label_set_wrap(bullet_point, TRUE); 
+        gtk_label_set_wrap_mode(bullet_point, PANGO_WRAP_CHAR); 
+        gtk_widget_set_halign(bullet_point, GTK_ALIGN_START);
+        gtk_label_set_selectable(bullet_point, TRUE);
 
-        char *output_text = NULL;
-        asprintf(&output_text, "  • %s", child_text_data);
+        gtk_box_append(ul_line_box, bullet_point);
+        gtk_box_append(ul_line_box, ul_line_content);
 
-        GtkWidget *output_node = gtk_label_new(output_text);
-        gtk_label_set_wrap(output_node, TRUE); 
-        gtk_label_set_wrap_mode(output_node, PANGO_WRAP_CHAR); 
-        gtk_widget_set_halign(output_node, GTK_ALIGN_START);
-        gtk_label_set_selectable(output_node, TRUE);
-
-        gtk_box_append(output_box, output_node);
+        gtk_box_append(output_box, ul_line_box);
     }
 
     return output_box;
@@ -210,30 +199,29 @@ GtkWidget *node_subparser_ul_tag(lxb_dom_node_t *node) {
 
 GtkWidget *node_subparser_ol_tag(lxb_dom_node_t *node) {
     GtkWidget *output_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0); 
-    int li_iterations = 1;
 
+    size_t child_iterations = 1;
     for (lxb_dom_node_t *child_node = node->first_child; child_node != NULL; child_node = child_node->next) {
-        if (child_node->local_name != LXB_TAG_LI) 
+        GtkWidget *ol_line_content = parse_node(child_node); 
+        if (ol_line_content == NULL)
             continue;
 
-        if (child_node->first_child->local_name != LXB_TAG__TEXT)
-            continue;
+        GtkWidget *ol_line_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);        
 
-        lxb_dom_text_t *child_text_node = lxb_dom_interface_text(child_node->first_child);
-        lxb_char_t *child_text_data = child_text_node->char_data.data.data;
+        char *number_symbol_content = NULL;
+        asprintf(&number_symbol_content, "  %d. ", child_iterations);
 
-        char *output_text = NULL;
-        asprintf(&output_text, "  %d. %s", li_iterations, child_text_data);
+        GtkWidget *number_symbol = gtk_label_new(number_symbol_content);
+        gtk_label_set_wrap(number_symbol, TRUE); 
+        gtk_label_set_wrap_mode(number_symbol, PANGO_WRAP_CHAR); 
+        gtk_widget_set_halign(number_symbol, GTK_ALIGN_START);
+        gtk_label_set_selectable(number_symbol, TRUE);
 
-        GtkWidget *output_node = gtk_label_new(output_text);
-        gtk_label_set_wrap(output_node, TRUE); 
-        gtk_label_set_wrap_mode(output_node, PANGO_WRAP_CHAR); 
-        gtk_widget_set_halign(output_node, GTK_ALIGN_START);
-        gtk_label_set_selectable(output_node, TRUE);
+        gtk_box_append(ol_line_box, number_symbol);    
+        gtk_box_append(ol_line_box, ol_line_content);
 
-        gtk_box_append(output_box, output_node);
-
-        li_iterations++;
+        gtk_box_append(output_box, ol_line_box);
+        child_iterations++; 
     }
 
     return output_box;

@@ -9,6 +9,15 @@ GtkWidget *parse_node(lxb_dom_node_t *node) {
         printf("Parsing node with local name: %d\n", local_name);
 
     switch (local_name) {
+
+        case LXB_TAG_BODY: 
+            output_node = node_subparser_body_tag(node);
+        break;        
+
+        case LXB_TAG__TEXT: 
+            output_node = node_subparser_text_tag(node);
+        break;
+
         case LXB_TAG_P: 
             output_node = node_subparser_p_tag(node); 
         break;
@@ -38,6 +47,10 @@ GtkWidget *parse_node(lxb_dom_node_t *node) {
             output_node = node_subparser_img_tag(node);
         break; 
 
+        case LXB_TAG_LI: 
+            output_node = node_subparser_li_tag(node);
+        break;
+
         case LXB_TAG_UL: 
             output_node = node_subparser_ul_tag(node);
         break; 
@@ -57,8 +70,10 @@ void parse_structure(lxb_dom_node_t *node, GtkWidget *container) {
         printf("Node: %d\n", node->local_name); 
 
     GtkWidget *parsed_node = parse_node(node); 
-    if (parsed_node != NULL)
+    if (parsed_node != NULL) {
         gtk_box_append(GTK_BOX(container), parsed_node);
+        return;
+    }
 
     if (node->first_child != NULL) 
         parse_structure(node->first_child, container); 

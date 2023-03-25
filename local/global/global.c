@@ -11,3 +11,11 @@ void gui_alert(GtkMessageType text_type, GtkButtonsType buttons, char *text) {
 
     gtk_widget_show(GTK_DIALOG(dialog));
 }
+
+int empty_string(const char *s, size_t len) {
+    for (int c = 0; c < len; c++)
+        if (!isspace(*(s+c)))
+            return 0;
+    
+    return 1;
+}
