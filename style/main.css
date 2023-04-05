@@ -122,3 +122,8 @@ window {
 .tabs_notebook tab .button {
   border-radius: 3rem;
 }
+
+.separator {
+  background: black; 
+  margin: 5px 0px;
+}

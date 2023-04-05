@@ -10,6 +10,12 @@ GtkWidget *parse_node(lxb_dom_node_t *node) {
 
     switch (local_name) {
 
+        case LXB_TAG_SCRIPT:
+        case LXB_TAG_STYLE:
+        case LXB_TAG_TITLE:
+            return NULL;
+        break;
+
         case LXB_TAG_BODY: 
             output_node = node_subparser_body_tag(node);
         break;        
@@ -59,6 +65,17 @@ GtkWidget *parse_node(lxb_dom_node_t *node) {
             output_node = node_subparser_ol_tag(node);
         break;
 
+        case LXB_TAG_BR:       
+            output_node = node_subparser_br_tag(node);
+        break;
+
+        case LXB_TAG_HR:
+            output_node = node_subparser_hr_tag(node);
+        break;
+
+        default: 
+            output_node = node_subparser_default(node); 
+        break; 
     }
 
     return output_node; 

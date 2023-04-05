@@ -25,8 +25,6 @@ GtkWidget *node_subparser_text_tag(lxb_dom_node_t *node) {
     if (empty_string(node_data, data_length))     
         return NULL;
 
-    printf("Elaborating text node -> '%s' with content size set to %d\n", node_data, data_length);
-
     GtkWidget *output_node = gtk_label_new(node_data); 
     gtk_label_set_wrap(output_node, TRUE);
     gtk_label_set_wrap_mode(output_node, PANGO_WRAP_CHAR); 
@@ -227,3 +225,19 @@ GtkWidget *node_subparser_ol_tag(lxb_dom_node_t *node) {
     return output_box;
 }
 
+GtkWidget *node_subparser_br_tag(lxb_dom_node_t *node) {
+    return gtk_label_new(NULL);
+}
+
+GtkWidget *node_subparser_hr_tag(lxb_dom_node_t *node) {
+    GtkWidget *output_node = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
+    gtk_widget_add_css_class(output_node, "separator");
+    return output_node;
+}
+
+GtkWidget *node_subparser_default(lxb_dom_node_t *node) {
+    GtkWidget *output_node = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    for (lxb_dom_node_t *child_node = node->first_child; child_node != NULL; child_node = child_node->next)
+        gtk_box_append(output_node, parse_node(child_node));
+    return output_node;
+}
