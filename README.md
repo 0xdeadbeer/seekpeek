@@ -1,24 +1,32 @@
 
-# Seekpeek 
+# Seekpeek Browser
 
-Peek and explore the web through a simple and open-source browser. 🔎
+Seekpeek is a simple open-source browser built in C, designed to run on Linux systems primarily. The browser provides basic functionality for browsing HTML websites.
 
-## About
+# Requirements
 
-Seekpeek is a temporary project I have been working on recently. It doesn't have a specific goal in mind. I work on it because I think C is fun and a nice way to strengthen your knowledge about computers. The code is 100% yours and you are free to do whatever you want with it.
+ - GTK4
+ - Lexbor 
+ - Libcurl 
 
-Required libraries: 
- - <a href="https://docs.gtk.org/gtk4/">GTK4</a>
- - <a href="https://curl.se/libcurl/">Libcurl</a>
- - <a href="https://github.com/lexbor/lexbor">Lexbor</a>
+# Building 
 
-> Before compiling the program make sure you have installed the required libraries onto your system.
+ - Clone the repository: `git clone https://github.com/0xdeadbeer/seekpeek`
+ - Change directory into the Seekpeek directory: `cd seekpeek`
+ - Build and run the code: `make all`
 
-Build commands: 
- - `make build` will build the program and store it inside the `build/` directory
- - `make run` will run the program
- - `make all` will do both (first build, then run)
+# Shortcuts
 
-For installation you can either:
- - Build and move the binary into your /bin folder
- - Or download the prebuilt binary and move it into your /bin folder
+ - CTRL+L: Switch to the next tab
+ - CTRL+H: Switch to the previous tab 
+ - CTRL+T: Spawn new tab
+ - CTRL+W: Close the current tab
+ - CTRL+P: Focus on the urlbar 
+
+# Contributions 
+
+Contributions to Seekpeek are more than welcome! To contribute, please fork the repository and create a pull request with your changes or submit an issue.
+
+# License 
+
+Seekpeek is licensed under the GNU General Public License v3.0. See the `LICENSE` file for more information.

@@ -2,3 +2,5 @@
 build/*
 environment
 resources
+.ccls-cache/
+compile_commands.json
